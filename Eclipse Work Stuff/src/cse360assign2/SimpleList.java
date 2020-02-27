@@ -11,26 +11,26 @@ public class SimpleList {
 	
 	private int[] list;
 	private int count;
-	final int LIST_LENGTH = 10;
+	private int listLength = 10;
 	
 //The constructor SimpleList() initializes the list as an empty integer array
 //of length 10, and sets the number of elements in the list to 0.
 	
 	public SimpleList() {
-		list = new int[LIST_LENGTH];
+		list = new int[listLength];
 		count = 0;
 	}
 	
 //The add(int) method takes an integer input, places it in the first position
 //in the list, and shifts all values up a spot. If the list is full
-//(count == LIST_LENGTH), the last element will be removed.
+//(count == listLength), the list will be expanded to accommodate.
 	
 	public void add(int newElement) {
 		
 		if(count != 0) {
 			
-			if(count == LIST_LENGTH) {
-				count--;
+			if(count == listLength) {
+				changeSize(listLength + (listLength / 2));
 			}
 			
 			for(int index = count - 1; index >= 0; index--) {
@@ -59,7 +59,24 @@ public class SimpleList {
 			
 			list[count - 1] = 0;
 			count--;
+			
+			if(count < (3 * listLength) / 4 && count > 0) {
+				changeSize(count);
+			}
 		}
+	}
+	
+//The append(int) method takes an integer input, expands the list if it is full,
+//and then adds the input at the end of the list. 
+	
+	public void append(int newElement) {
+		
+		if(count == listLength) {
+			changeSize(listLength + (listLength / 2));
+		}
+		
+		list[count] = newElement;
+		count++;
 	}
 	
 //The count() method will return an integer specifying how many elements are
@@ -68,6 +85,42 @@ public class SimpleList {
 	
 	public int count() {
 		return count;
+	}
+	
+//The size() method will return an integer specifying how many elements CAN
+//be in the list at the moment. Note that the size does NOT indicate how many
+//elements are in the list, just how many CAN be.
+	
+	public int size() {
+		return listLength;
+	}
+	
+//The first() method will return the first element from the list UNLESS there
+//are no elements, in which case it will return -1.
+	
+	public int first() {
+		
+		int output = -1;
+		
+		if(count != 0) {
+			output = list[0];
+		}
+		
+		return output;
+	}
+	
+//The last() method will return the last element from the list UNLESS there
+//are no elements, in which case it will return -1.	
+	
+	public int last() {
+		
+		int output = -1;
+		
+		if(count != 0) {
+			output = list[count - 1];
+		}
+		
+		return output;
 	}
 	
 //The toString method will return a string of all elements in the list
@@ -105,5 +158,21 @@ public class SimpleList {
 		}
 		
 		return output;
+	}
+	
+//The private method changeSize(int) takes an integer input, and creates 
+//a new list with size specified as by the input. It then copies over all
+//data, then assigns list to the new list.
+	
+	private void changeSize(int newSize) {
+		
+		int[] newList = new int[newSize];
+		
+		for(int index = 0; index < count; index++) {
+			newList[index] = list[index];
+		}
+		
+		listLength = newSize;
+		list = newList;
 	}
 }
